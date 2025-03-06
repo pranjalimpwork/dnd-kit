@@ -10,6 +10,10 @@ This is a task management application built using React and [dnd-kit](https://gi
 - 📌 **Drag-and-Drop**: Reorder tasks within sections or move them between sections seamlessly.
 - 📱 **Responsive Design**: Optimized for both desktop and mobile screens.
 
+## Live Demo
+
+🚀 **Try it live:** [dnd-kit To-Do App](https://pranjalimpwork.github.io/dnd-kit/)
+
 ## Installation & Setup
 
 1. Clone the repository:

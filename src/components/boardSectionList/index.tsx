@@ -13,7 +13,9 @@ import {
   DragOverEvent,
   DragOverlay,
   DropAnimation,
-  defaultDropAnimation
+  defaultDropAnimation,
+  MouseSensor,
+  TouchSensor
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates, arrayMove } from '@dnd-kit/sortable';
 import { INITIAL_TASKS } from '../../data';
@@ -38,10 +40,12 @@ const BoardSectionList = () => {
   const [activeTaskId, setActiveTaskId] = useState<null | string>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    // useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates
-    })
+    }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 10 } }),
+    useSensor(TouchSensor)
   );
 
   const handleDragStart = ({ active }: DragStartEvent) => {
@@ -135,11 +139,10 @@ const BoardSectionList = () => {
     setActiveTaskId(null);
   };
 
-
   const addTask = () => {
     if (!taskInput.trim()) return;
 
-    setIsAdding(true)
+    setIsAdding(true);
 
     fetch('https://dummyjson.com/todos/add', {
       method: 'POST',
@@ -151,20 +154,19 @@ const BoardSectionList = () => {
       })
     })
       .then((res) => res.json())
-      .then((newTask:Task) => {
+      .then((newTask: Task) => {
         const defaultSection = 'backlog';
         newTask.id = uuidv4();
         setBoardSections((prevBoardSections) => ({
           ...prevBoardSections,
-          [defaultSection]: [newTask,...prevBoardSections[defaultSection]]
+          [defaultSection]: [newTask, ...prevBoardSections[defaultSection]]
         }));
 
-        setTasks((prevTasks) => [newTask,...prevTasks]);
+        setTasks((prevTasks) => [newTask, ...prevTasks]);
 
         setTaskInput('');
       })
-    .finally(()=>setIsAdding(false))
-      
+      .finally(() => setIsAdding(false));
   };
 
   const dropAnimation: DropAnimation = {
@@ -173,26 +175,33 @@ const BoardSectionList = () => {
 
   const task = activeTaskId ? getTaskById(tasks, activeTaskId) : null;
 
-  const handleAction = async (id: string | number, action: Action, data?: string) => {
-    console.log("test",id,action,data);
-    
+  const handleAction = async (
+    id: string | number,
+    action: Action,
+    data?: string
+  ) => {
     if (!id) return;
-  
-    if (action === "delete") {
+
+    if (action === 'delete') {
       setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-  
+
       setBoardSections((prevBoardSections) => {
         const updatedSections = { ...prevBoardSections };
         for (const section in updatedSections) {
-          updatedSections[section] = updatedSections[section].filter((task) => task.id !== id);
+          updatedSections[section] = updatedSections[section].filter(
+            (task) => task.id !== id
+          );
         }
+
         return updatedSections;
       });
     }
-  
-    if (action === "update" && data) {
+
+    if (action === 'update' && data) {
       setTasks((prevTasks) =>
-        prevTasks.map((task) => (task.id === id ? { ...task, todo: data } : task))
+        prevTasks.map((task) =>
+          task.id === id ? { ...task, todo: data } : task
+        )
       );
 
       setBoardSections((prevBoardSections) => {
@@ -206,10 +215,9 @@ const BoardSectionList = () => {
       });
     }
   };
-  
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     fetch('https://dummyjson.com/todos')
       .then((res) => {
         return res.json();
@@ -220,13 +228,20 @@ const BoardSectionList = () => {
         setBoardSections(boardSections);
         setTasks(tasks);
       })
-    .finally(()=>setIsLoading(false))
-      
+      .finally(() => setIsLoading(false));
   }, []);
 
-  if (isLoading) 
+  if (isLoading)
     return (
-      <Container style={{ padding: '10px', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Container
+        style={{
+          padding: '10px',
+          height: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
         <Box sx={{ display: 'flex' }}>
           <CircularProgress />
         </Box>
@@ -259,7 +274,7 @@ const BoardSectionList = () => {
             onClick={addTask}
             disabled={isAdding}
           >
-             {isAdding? "Loading..." :"Add Task"}
+            {isAdding ? 'Loading...' : 'Add Task'}
           </Button>
         </Grid>
       </Grid>
