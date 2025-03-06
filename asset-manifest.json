@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.js": "/react-drag-drop-todo/static/js/main.62756c77.js",
-    "static/js/787.4c571cd9.chunk.js": "/react-drag-drop-todo/static/js/787.4c571cd9.chunk.js",
-    "index.html": "/react-drag-drop-todo/index.html",
-    "main.62756c77.js.map": "/react-drag-drop-todo/static/js/main.62756c77.js.map",
-    "787.4c571cd9.chunk.js.map": "/react-drag-drop-todo/static/js/787.4c571cd9.chunk.js.map"
+    "main.js": "/dnd-kit/static/js/main.b9e466f5.js",
+    "static/js/787.4c571cd9.chunk.js": "/dnd-kit/static/js/787.4c571cd9.chunk.js",
+    "index.html": "/dnd-kit/index.html",
+    "main.b9e466f5.js.map": "/dnd-kit/static/js/main.b9e466f5.js.map",
+    "787.4c571cd9.chunk.js.map": "/dnd-kit/static/js/787.4c571cd9.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.62756c77.js"
+    "static/js/main.b9e466f5.js"
   ]
 }
